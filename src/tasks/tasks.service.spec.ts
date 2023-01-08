@@ -1,11 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { Repository } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
-import { Task } from './task.entity';
 import { TasksRepository } from './tasks.repository';
 import { TasksService } from './tasks.service';
-import { v4 as uuidv4, v6 as uuidv6 } from 'uuid';
 
 const mockTasksRepository = () => ({
   findAll: jest.fn(),
