@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { Repository } from 'typeorm';
@@ -13,6 +13,8 @@ export class TasksRepository {
     @InjectRepository(Task)
     private readonly taskEntityRepository: Repository<Task>,
   ) {}
+
+  private logger = new Logger('Tasks Repository');
 
   async findById(id: string, user: User): Promise<Task> {
     const found = await this.taskEntityRepository.findOne({
@@ -33,6 +35,9 @@ export class TasksRepository {
       status: TaskStatus.OPEN,
       user,
     });
+    this.logger.verbose(
+      `User "${user.username}" creating task. Filters: ${JSON.stringify(task)}`,
+    );
     await this.taskEntityRepository.save(task);
     return task;
   }
@@ -53,7 +58,7 @@ export class TasksRepository {
       );
     }
 
-    const tasks = await query.getMany();
+    const tasks = await query.getMany(); // add error handling
     return tasks;
   }
 

@@ -56,10 +56,11 @@ describe('TasksService', () => {
     });
 
     it('calls TasksRepository.findById and handles an error', async () => {
-      tasksRepository.findById.mockResolvedValue(null);
+      const notFoundError = new NotFoundException();
+      tasksRepository.findById.mockRejectedValue(notFoundError);
       const id = '3e229d1c-3667-480b-9560-d599dbecbb65';
-      expect(tasksService.getTaskById(id, mockUser)).rejects.toThrow(
-        NotFoundException,
+      expect(tasksService.getTaskById(id, mockUser)).rejects.toEqual(
+        notFoundError,
       );
     });
   });
